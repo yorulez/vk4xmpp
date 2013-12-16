@@ -1,0 +1,16 @@
+#!/bin/bash
+/etc/init.d/vk4xmpp stop
+cd /usr/lib64/python2.7/site-packages/vk4xmpp
+mkdir /tmp/vk4xmpp
+cp Config.txt /tmp/vk4xmpp/
+cp users.db  /tmp/vk4xmpp/
+cp vk4xmpp.log /tmp/vk4xmpp/
+cd ../
+rm -rf vk4xmpp
+git clone https://github.com/mrDoctorWho/vk4xmpp.git
+cp /tmp/vk4xmpp/Config.txt vk4xmpp/
+cp /tmp/vk4xmpp/users.db vk4xmpp/
+rm vk4xmpp/Config_example.txt
+cp /tmp/vk4xmpp/vk4xmpp.log vk4xmpp/
+echo "Update"
+/etc/init.d/vk4xmpp start
