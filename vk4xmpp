@@ -1,4 +1,10 @@
 #!/sbin/runscript
+NAME=vk4xmpp
+DESC="VK Jabber Transport"
+APPDIR="/usr/lib64/python2.7/site-packages/vk4xmpp"
+PIDDIR="$APPDIR"
+PIDFILE="$PIDDIR/pidFile.txt"
+LOGFILE="$APPDIR/gateway.log"
 
 depend() {
         need net
@@ -7,11 +13,26 @@ depend() {
 
 start() {
         ebegin "Starting VK Jabber Transport"
-        start-stop-daemon  --exec python /usr/lib64/python2.7/site-packages/vk4xmpp/gateway.py > /dev/null 2>&1 &
+        start-stop-daemon  --exec python $APPDIR/gateway.py > $LOGFILE 2>&1 &
+	eend $?
 }
 
 stop() {
         ebegin "Stopping VK Jabber Transport"
-        start-stop-daemon --stop --quiet --pidfile /usr/lib64/python2.7/site-packages/vk4xmpp/pidFile.txt
+        start-stop-daemon --stop --quiet --pidfile $PIDFILE
         eend $?
+}
+
+status() { 
+	if [ -f "$PIDFILE" ]
+	then
+		echo "$DESC started" >&2
+	else
+		echo "$DESC stopped" >&2
+	fi	
+}
+
+restart() {
+        $0 stop
+        $0 start
 }
